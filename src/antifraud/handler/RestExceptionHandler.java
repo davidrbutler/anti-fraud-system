@@ -1,6 +1,5 @@
 package antifraud.handler;
 
-// Import new exceptions for Stage 6
 import antifraud.exception.FeedbackConflictException;
 import antifraud.exception.TransactionNotFoundException;
 import antifraud.exception.UnprocessableFeedbackException;
@@ -26,7 +25,7 @@ import java.util.Map;
 @ControllerAdvice
 public class RestExceptionHandler {
 
-    // --- Existing Handlers (Stages 2, 3, 4) ---
+
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<Object> handleUsernameAlreadyExists(UsernameAlreadyExistsException ex, HttpServletRequest request) {
         return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI());
@@ -73,27 +72,22 @@ public class RestExceptionHandler {
         return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI());
     }
 
-    // --- New Handlers for Stage 6 ---
 
     @ExceptionHandler(TransactionNotFoundException.class)
     public ResponseEntity<Object> handleTransactionNotFound(TransactionNotFoundException ex, HttpServletRequest request) {
-        // Handles 404 for feedback and history endpoints
         return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(FeedbackConflictException.class)
     public ResponseEntity<Object> handleFeedbackConflict(FeedbackConflictException ex, HttpServletRequest request) {
-        // Handles 409 when feedback already exists
         return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(UnprocessableFeedbackException.class)
     public ResponseEntity<Object> handleUnprocessableFeedback(UnprocessableFeedbackException ex, HttpServletRequest request) {
-        // Handles 422 when feedback contradicts original result
         return buildResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), request.getRequestURI());
     }
 
-    // --- Helper Method to Build Response ---
     private ResponseEntity<Object> buildResponseEntity(HttpStatus status, String message, String path) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now().toString());

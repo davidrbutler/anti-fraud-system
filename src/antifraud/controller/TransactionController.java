@@ -34,7 +34,6 @@ public class TransactionController {
         this.validationUtil = validationUtil;
     }
 
-    // POST /api/antifraud/transaction (Unchanged from last version)
     @PostMapping("/transaction")
     public ResponseEntity<TransactionResponse> validateTransaction(@Valid @RequestBody TransactionRequest request) {
         if (!validationUtil.isValidIpV4(request.getIp())) {
@@ -52,11 +51,10 @@ public class TransactionController {
     }
 
 
-    // PUT /api/antifraud/transaction (Added logging)
     @PutMapping("/transaction")
     public ResponseEntity<TransactionViewDTO> addTransactionFeedback(
             @Valid @RequestBody FeedbackRequest request,
-            Authentication authentication) { // Inject Authentication object
+            Authentication authentication) {
 
         // --- Added Logging for Role Debugging ---
         if (authentication != null && authentication.isAuthenticated()) {
@@ -71,13 +69,11 @@ public class TransactionController {
         }
         // --- End Logging ---
 
-        // Call the service method (unchanged)
         Transaction updatedTransaction = transactionService.addFeedback(request.getTransactionId(), request.getFeedback());
         TransactionViewDTO response = TransactionViewDTO.fromEntity(updatedTransaction);
         return ResponseEntity.ok(response);
     }
 
-    // GET /api/antifraud/history (Unchanged from last version)
     @GetMapping("/history")
     public ResponseEntity<List<TransactionViewDTO>> getFullTransactionHistory() {
         List<Transaction> history = transactionService.getTransactionHistory();
@@ -87,7 +83,6 @@ public class TransactionController {
         return ResponseEntity.ok(response);
     }
 
-    // GET /api/antifraud/history/{number} (Unchanged from last version)
     @GetMapping("/history/{number}")
     public ResponseEntity<List<TransactionViewDTO>> getTransactionHistoryByNumber(@PathVariable String number) {
         if (!validationUtil.isValidLuhn(number)) {

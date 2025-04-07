@@ -14,6 +14,5 @@ public class RoleChangeRequest {
     private String username;
 
     @NotEmpty(message = "Role cannot be empty")
-    // Further validation (must be MERCHANT/SUPPORT) is handled in the service layer
     private String role;
 }

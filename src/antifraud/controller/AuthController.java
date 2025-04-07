@@ -26,22 +26,19 @@ public class AuthController {
 
     @PostMapping("/user")
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserRequest request) {
-        User newUser = new User(); // Create empty user, service will set defaults
+        User newUser = new User();
         newUser.setName(request.getName());
         newUser.setUsername(request.getUsername());
-        newUser.setPassword(request.getPassword()); // Password encoded in service
+        newUser.setPassword(request.getPassword());
 
         User registeredUser = userService.registerUser(newUser);
-        // Use service's converter which now includes role
         UserResponse response = userService.convertToUserResponse(registeredUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        // Exceptions (409, 400) handled by @ControllerAdvice
     }
 
     @GetMapping("/list")
     public ResponseEntity<List<UserResponse>> listUsers() {
         List<User> users = userService.listUsers();
-        // Use service's converter which now includes role
         List<UserResponse> responseList = users.stream()
                 .map(userService::convertToUserResponse)
                 .collect(Collectors.toList());
@@ -51,28 +48,21 @@ public class AuthController {
     @DeleteMapping("/user/{username}")
     public ResponseEntity<UserDeleteResponse> deleteUser(@PathVariable String username) {
         userService.deleteUser(username);
-        // Exception (404) handled by @ControllerAdvice
         UserDeleteResponse response = new UserDeleteResponse(username, "Deleted successfully!");
         return ResponseEntity.ok(response);
     }
 
-    // --- New Stage 3 Endpoints ---
 
     @PutMapping("/role")
     public ResponseEntity<UserResponse> changeRole(@Valid @RequestBody RoleChangeRequest request) {
         User updatedUser = userService.changeUserRole(request.getUsername(), request.getRole());
-        // Convert updated user (with new role) to response DTO
         UserResponse response = userService.convertToUserResponse(updatedUser);
         return ResponseEntity.ok(response);
-        // Exceptions (404, 400, 409) handled by @ControllerAdvice
     }
 
     @PutMapping("/access")
     public ResponseEntity<Map<String, String>> changeAccess(@Valid @RequestBody AccessChangeRequest request) {
-        // Service method returns the required Map structure directly
         Map<String, String> statusResponse = userService.changeUserAccess(request.getUsername(), request.getOperation());
         return ResponseEntity.ok(statusResponse);
-        // Exceptions (404, 400) handled by @ControllerAdvice
     }
-    // --- End Stage 3 Endpoints ---
 }

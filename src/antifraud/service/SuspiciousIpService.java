@@ -1,6 +1,5 @@
 package antifraud.service;
 
-// Import specific exceptions instead of generic placeholders
 import antifraud.exception.IpAddressConflictException;
 import antifraud.exception.IpAddressNotFoundException;
 import antifraud.model.SuspiciousIp;
@@ -28,7 +27,6 @@ public class SuspiciousIpService {
     @Transactional
     public SuspiciousIp addSuspiciousIp(String ip) {
         if (!validationUtil.isValidIpV4(ip)) {
-            // Keep throwing IllegalArgumentException for bad format (maps to 400)
             throw new IllegalArgumentException("Invalid IPv4 format!");
         }
         if (ipRepository.existsByIp(ip)) {
@@ -42,7 +40,6 @@ public class SuspiciousIpService {
     @Transactional
     public Map<String, String> deleteSuspiciousIp(String ip) {
         if (!validationUtil.isValidIpV4(ip)) {
-            // Keep throwing IllegalArgumentException for bad format (maps to 400)
             throw new IllegalArgumentException("Invalid IPv4 format!");
         }
         SuspiciousIp suspiciousIp = ipRepository.findByIp(ip)

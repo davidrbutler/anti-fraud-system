@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "suspicious_ips") // Explicit table name
+@Table(name = "suspicious_ips")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +18,6 @@ public class SuspiciousIp {
     private Long id;
 
     @NotEmpty
-    @Column(unique = true, nullable = false) // IP should be unique and not null
+    @Column(unique = true, nullable = false)
     private String ip;
 }

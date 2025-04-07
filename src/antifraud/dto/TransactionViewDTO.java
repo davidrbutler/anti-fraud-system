@@ -18,13 +18,12 @@ public class TransactionViewDTO {
     private Long transactionId;
     private Long amount;
     private String ip;
-    private String number; // Card number
-    private String region; // Region Code as String
-    // Format date as required: yyyy-MM-ddTHH:mm:ss
+    private String number;
+    private String region;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime date;
-    private String result; // Result as String
-    private String feedback; // Feedback as String (can be empty)
+    private String result;
+    private String feedback;
 
     /**
      * Static factory method or constructor to convert from Transaction entity.

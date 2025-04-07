@@ -15,6 +15,6 @@ public class AccessChangeRequest {
     private String username;
 
     @NotEmpty(message = "Operation cannot be empty")
-    @Pattern(regexp = "^(LOCK|UNLOCK)$", message = "Operation must be LOCK or UNLOCK") // Validate operation
+    @Pattern(regexp = "^(LOCK|UNLOCK)$", message = "Operation must be LOCK or UNLOCK") /
     private String operation;
 }

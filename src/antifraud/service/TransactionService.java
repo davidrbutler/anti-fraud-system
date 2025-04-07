@@ -51,10 +51,6 @@ public class TransactionService {
 
     @Transactional
     public Map<String, Object> validateTransaction(TransactionRequest request) {
-        // --- Logging added for Stage 6 Debugging ---
-        System.out.printf("[Validate Tx] Current limits: maxAllowed=%d, maxManual=%d | Request Amount: %d%n",
-                this.maxAllowed, this.maxManual, request.getAmount());
-        // --- End Logging ---
 
         // --- Parse and Validate Date and Region ---
         LocalDateTime transactionDate;
@@ -141,7 +137,6 @@ public class TransactionService {
     }
 
 
-    // --- addFeedback method (No Logging Here) ---
     @Transactional
     public Transaction addFeedback(long transactionId, String feedbackValue) {
         Transaction transaction = transactionRepository.findById(transactionId)
@@ -168,7 +163,7 @@ public class TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    // --- getTransactionHistory and getTransactionHistoryByNumber (No Logging Here) ---
+
     public List<Transaction> getTransactionHistory() {
         return transactionRepository.findAll(Sort.by(Sort.Direction.ASC, "transactionId"));
     }
@@ -184,7 +179,6 @@ public class TransactionService {
         return history;
     }
 
-    // --- adjustLimits method (No Logging Here) ---
     private void adjustLimits(long transactionAmount, TransactionValidationResult originalResult, TransactionValidationResult feedbackResult) {
         double weight = 0.2;
         long oldMaxAllowed = this.maxAllowed;
@@ -221,7 +215,7 @@ public class TransactionService {
         }
     }
 
-    // --- getAmountResult helper (No Logging Here) ---
+
     private TransactionValidationResult getAmountResult(Long amount) {
         if (amount <= this.maxAllowed) {
             return TransactionValidationResult.ALLOWED;

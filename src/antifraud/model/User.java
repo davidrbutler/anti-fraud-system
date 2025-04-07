@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor // Added @AllArgsConstructor for convenience if needed
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -28,16 +28,15 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    // --- Added for Stage 3 ---
-    @Enumerated(EnumType.STRING) // Store role name as String in DB
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
 
     @Column(nullable = false)
-    private boolean accountLocked = false; // Default to false (representing non-locked)
-    // --- End Stage 3 additions ---
+    private boolean accountLocked = false;
 
-    // Optional: Constructor without id (useful for creation)
+
     public User(String name, String username, String password, UserRole role, boolean accountLocked) {
         this.name = name;
         this.username = username;
@@ -46,7 +45,7 @@ public class User {
         this.accountLocked = accountLocked;
     }
 
-    // --- Added helper methods for Stage 3 ---
+
     // Method expected by Spring Security UserDetails builder (.accountLocked())
     // Returns true if account IS locked, false otherwise
     public boolean isAccountLocked() {
@@ -64,5 +63,5 @@ public class User {
     public void setAccountNonLocked(boolean nonLocked) {
         this.accountLocked = !nonLocked;
     }
-    // --- End Stage 3 additions ---
+
 }

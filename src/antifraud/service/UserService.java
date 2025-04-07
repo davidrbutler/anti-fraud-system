@@ -42,7 +42,7 @@ public class UserService {
         // Encode password before saving
         newUser.setPassword(passwordEncoder.encode(requestUser.getPassword()));
 
-        // --- Stage 3 Logic: Role and Locking ---
+
         // Check if this is the very first user being registered
         if (userRepository.count() == 0) {
             newUser.setRole(UserRole.ADMINISTRATOR);
@@ -51,7 +51,7 @@ public class UserService {
             newUser.setRole(UserRole.MERCHANT);
             newUser.setAccountLocked(true); // Subsequent users (Merchants) start locked
         }
-        // --- End Stage 3 Logic ---
+
 
         return userRepository.save(newUser);
     }
@@ -61,20 +61,14 @@ public class UserService {
         return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
-    // Delete user (no change in logic for Stage 3)
+    // Delete user
     @Transactional
     public void deleteUser(String username) {
         User user = userRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
-        // Note: Stage 3 spec doesn't explicitly forbid deleting ADMIN,
-        // but the tests might imply it. Add check if needed.
-        // if (user.getRole() == UserRole.ADMINISTRATOR) {
-        //     throw new IllegalArgumentException("Cannot delete the ADMINISTRATOR!");
-        // }
         userRepository.delete(user);
     }
 
-    // --- New Stage 3 Methods ---
 
     @Transactional
     public User changeUserRole(String username, String requestedRole) {
@@ -134,7 +128,6 @@ public class UserService {
         String statusMessage = String.format("User %s %s!", user.getUsername(), statusAction);
         return Map.of("status", statusMessage); // Return a map for automatic JSON conversion
     }
-    // --- End Stage 3 Methods ---
 
 
     // Helper method updated to include role

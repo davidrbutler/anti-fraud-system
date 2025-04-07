@@ -35,33 +35,24 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(Customizer.withDefaults())
                 .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable())
-                // --- Define Final Stage 6 Authorization Rules ---
                 .authorizeHttpRequests(requests -> requests
-                        // Publicly accessible paths
-                        .requestMatchers(HttpMethod.POST, "/api/auth/user").permitAll()      // User registration
-                        .requestMatchers(HttpMethod.POST, "/actuator/shutdown").permitAll()  // Shutdown endpoint
-                        .requestMatchers("/h2-console/**").permitAll()                     // H2 Console access
+                        .requestMatchers(HttpMethod.POST, "/api/auth/user").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/actuator/shutdown").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
 
-                        // Role-specific paths from Stage 3 & 4
                         .requestMatchers(HttpMethod.GET, "/api/auth/list").hasAnyRole(UserRole.ADMINISTRATOR.name(), UserRole.SUPPORT.name())
                         .requestMatchers(HttpMethod.DELETE, "/api/auth/user/**").hasRole(UserRole.ADMINISTRATOR.name())
                         .requestMatchers(HttpMethod.PUT, "/api/auth/role").hasRole(UserRole.ADMINISTRATOR.name())
                         .requestMatchers(HttpMethod.PUT, "/api/auth/access").hasRole(UserRole.ADMINISTRATOR.name())
-                        .requestMatchers(HttpMethod.POST, "/api/antifraud/transaction").hasRole(UserRole.MERCHANT.name()) // Transaction validation
-                        .requestMatchers("/api/antifraud/suspicious-ip/**").hasRole(UserRole.SUPPORT.name())              // IP Management
-                        .requestMatchers("/api/antifraud/stolencard/**").hasRole(UserRole.SUPPORT.name())                 // Card Management
+                        .requestMatchers(HttpMethod.POST, "/api/antifraud/transaction").hasRole(UserRole.MERCHANT.name())
+                        .requestMatchers("/api/antifraud/suspicious-ip/**").hasRole(UserRole.SUPPORT.name())
+                        .requestMatchers("/api/antifraud/stolencard/**").hasRole(UserRole.SUPPORT.name())
 
-                        // --- Stage 6 Rules (Corrected) ---
-                        // Transaction Feedback (SUPPORT only) - Reverted temporary change
                         .requestMatchers(HttpMethod.PUT, "/api/antifraud/transaction").hasRole(UserRole.SUPPORT.name())
-                        // Transaction History (SUPPORT only)
                         .requestMatchers("/api/antifraud/history/**").hasRole(UserRole.SUPPORT.name())
-                        // --- End Stage 6 Rules ---
 
-                        // Secure all other requests - require authentication
                         .anyRequest().authenticated()
                 )
-                // --- End Authorization Rules ---
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .userDetailsService(userDetailsService())
@@ -70,7 +61,6 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        // Load user details including role and lock status (Unchanged from Stage 3)
         return username -> userRepository.findByUsernameIgnoreCase(username)
                 .map(user -> org.springframework.security.core.userdetails.User
                         .withUsername(user.getUsername())

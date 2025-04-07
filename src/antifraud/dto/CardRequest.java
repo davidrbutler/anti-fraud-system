@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 public class CardRequest {
 
     @NotEmpty(message = "Card number cannot be empty")
-    // Luhn check is performed in the service layer
     private String number;
 }

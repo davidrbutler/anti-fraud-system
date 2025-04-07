@@ -9,8 +9,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
-        // This setting allows controllers mapped to "/path"
-        // to also handle requests to "/path/"
         configurer.setUseTrailingSlashMatch(true);
     }
 }

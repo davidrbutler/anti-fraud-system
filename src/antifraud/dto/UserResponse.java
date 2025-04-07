@@ -12,5 +12,4 @@ public class UserResponse {
     private String name;
     private String username;
     private String role;
-    // Role field will be added in Stage 3
 }

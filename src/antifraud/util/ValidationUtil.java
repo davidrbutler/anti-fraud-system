@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component; // Make it a component or keep 
 
 import java.util.regex.Pattern;
 
-// Can be a @Component or just a utility class with static methods
 @Component
 public class ValidationUtil {
 

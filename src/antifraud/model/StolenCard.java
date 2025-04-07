@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "stolen_cards") // Explicit table name
+@Table(name = "stolen_cards")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +18,6 @@ public class StolenCard {
     private Long id;
 
     @NotEmpty
-    @Column(unique = true, nullable = false) // Card number should be unique and not null
+    @Column(unique = true, nullable = false)
     private String number;
 }

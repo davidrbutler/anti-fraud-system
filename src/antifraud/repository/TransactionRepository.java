@@ -18,7 +18,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
      */
     List<Transaction> findByNumberAndDateBetween(String number, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
-    // --- Added for Stage 6 ---
 
     /**
      * Finds all transaction history for a given card number, ordered by transaction ID ascending.
@@ -39,6 +38,4 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findAllByOrderByTransactionIdAsc();
 
     // JpaRepository already provides findById(Long id) which returns Optional<Transaction>
-
-    // --- End Stage 6 additions ---
 }
